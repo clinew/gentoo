@@ -15,6 +15,8 @@ KEYWORDS="amd64 ~ppc ~ppc64 ~x86"
 IUSE="debug gnutls ldap maxminddb mbedtls mysql pcre postgres re2 regex-posix regex-stdlib sqlite ssl sslrehashsignal tre"
 
 RDEPEND="
+	acct-group/inspircd
+	acct-user/inspircd
 	dev-lang/perl
 	gnutls? ( net-libs/gnutls:= dev-libs/libgcrypt:0 )
 	ldap? ( net-nds/openldap )
@@ -31,11 +33,6 @@ DEPEND="${RDEPEND}"
 
 DOCS=( docs/. )
 PATCHES=( "${FILESDIR}"/${P}-fix-path-builds.patch )
-
-pkg_setup() {
-	enewgroup ${PN}
-	enewuser ${PN} -1 -1 -1 ${PN}
-}
 
 src_prepare() {
 	default
@@ -87,11 +84,6 @@ src_compile() {
 
 src_install() {
 	emake DESTDIR="${D%/}" install
-
-	# Default is '0750', which causes init errors.
-	fperms 0755 /usr/bin/inspircd{,-genssl}
-	# Default is '0640', causing module load errors.
-	fperms -R 0755 "/usr/lib64/inspircd/modules/."
 
 	insinto "/usr/include/${PN}"
 	doins -r include/.
