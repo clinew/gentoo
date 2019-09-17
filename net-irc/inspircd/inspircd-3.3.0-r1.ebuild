@@ -85,11 +85,6 @@ src_compile() {
 src_install() {
 	emake DESTDIR="${D%/}" install
 
-	# Default is '0750', which causes init errors.
-	fperms 0755 /usr/bin/inspircd{,-genssl}
-	# Default is '0640', causing module load errors.
-	fperms -R 0755 "/usr/lib64/inspircd/modules/."
-
 	insinto "/usr/include/${PN}"
 	doins -r include/.
 
