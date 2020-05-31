@@ -3,6 +3,8 @@
 
 EAPI=7
 
+inherit autotools
+
 DESCRIPTION="Useful set of performance and usability-oriented extensions to C"
 HOMEPAGE="https://github.com/atheme/libmowgli-2"
 SRC_URI="https://github.com/atheme/libmowgli-2/archive/v${PV}.tar.gz -> ${P}.tar.gz"
@@ -20,10 +22,15 @@ RDEPEND="ssl? (
 DEPEND="${RDEPEND}"
 
 DOCS=( AUTHORS README doc/BOOST doc/design-concepts.txt )
-PATCHES=( "${FILESDIR}"/${P}-cacheline-Ensure-sysconf-var-is-defined-before-use.patch )
+PATCHES=(
+	"${FILESDIR}"/${P}-cacheline-Ensure-sysconf-var-is-defined-before-use.patch
+	"${FILESDIR}"/${P}-use-host-tools-for-ar-and-ranlib.patch
+)
+
 S="${WORKDIR}/${PN}-2-${PV}"
 
 src_configure() {
+	eautoreconf
 	econf \
 		$(use_with ssl openssl)
 }
