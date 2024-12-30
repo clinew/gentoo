@@ -52,6 +52,17 @@ dm_crypt_execute() {
 			sleep 1
 		done
 		;;
+	*)
+		i=0
+		while [ ${i} -lt ${wait} ]; do
+			if [ -e "${source}" ]; then
+				break
+			fi
+			: $((i += 1))
+			einfo "waiting for source \"${source}\" for ${target}..."
+			sleep 1
+		done
+		;;
 	esac
 	if [ -z "${source}" ] || [ ! -e "${source}" ] ; then
 		ewarn "source \"${source}\" for ${target} missing, skipping..."
